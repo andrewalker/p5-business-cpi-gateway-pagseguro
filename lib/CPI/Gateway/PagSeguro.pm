@@ -1,4 +1,6 @@
 package CPI::Gateway::PagSeguro;
+# ABSTRACT: CPI's PagSeguro driver
+
 use Moose;
 use XML::LibXML;
 use Carp;
@@ -205,3 +207,19 @@ sub get_hidden_inputs {
 __PACKAGE__->meta->make_immutable;
 
 1;
+
+=attr token
+
+The token provided by PagSeguro
+
+=method get_transaction_details
+
+=method query_transactions
+
+=method notify
+
+=method get_hidden_inputs
+
+=head1 SEE ALSO
+
+L<CPI::Gateway::Base>
