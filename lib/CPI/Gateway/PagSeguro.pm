@@ -63,7 +63,7 @@ sub query_transactions { goto \&get_and_parse_transactions }
 sub get_and_parse_notification {
     my ($self, $code) = @_;
 
-    my $xml = $self->load_xml_from_url(
+    my $xml = $self->_load_xml_from_url(
         $self->get_notifications_url($code)
     );
 
@@ -83,7 +83,7 @@ sub notify {
 sub get_and_parse_transactions {
     my ($self, $info) = @_;
 
-    my $xml = $self->load_xml_from_url(
+    my $xml = $self->_load_xml_from_url(
         $self->get_transaction_query_url( $info )
     );
 
@@ -103,7 +103,7 @@ sub get_and_parse_transactions {
 sub get_transaction_details {
     my ($self, $code) = @_;
 
-    my $xml = $self->load_xml_from_url(
+    my $xml = $self->_load_xml_from_url(
         $self->get_transaction_details_url( $code )
     );
 
@@ -129,7 +129,7 @@ sub _parse_transaction {
     };
 }
 
-sub load_xml_from_url {
+sub _load_xml_from_url {
     my ($self, $url) = @_;
 
     return XML::LibXML->load_xml(
@@ -207,9 +207,39 @@ sub get_hidden_inputs {
 
 The token provided by PagSeguro
 
+=attr base_url
+
+The url for PagSeguro API. Not to be confused with the checkout url, this is
+just for the API.
+
+=method get_notifications_url
+
+Reader for the notifications URL in PagSeguro's API. This uses the base_url
+attribute.
+
+=method get_transaction_details_url
+
+Reader for the transaction details URL in PagSeguro's API. This uses the
+base_url attribute.
+
+=method get_transaction_query_url
+
+Reader for the transaction query URL in PagSeguro's API. This uses the base_url
+attribute.
+
+=method get_and_parse_notification
+
+Gets the url from L</get_notifications_url>, and loads the XML from there.
+Returns a parsed standard CPI hash.
+
+=method get_and_parse_transactions
+
 =method get_transaction_details
 
 =method query_transactions
+
+Alias for L</get_and_parse_transactions> to maintain compatibility with other
+CPI modules.
 
 =method notify
 
