@@ -1,33 +1,30 @@
 package CPI::Gateway::PagSeguro;
 # ABSTRACT: CPI's PagSeguro driver
 
-use Moose;
+use Moo;
 use XML::LibXML;
 use Carp;
 use LWP::Simple ();
 use URI;
 use URI::QueryParam;
 use DateTime;
-use namespace::autoclean;
 
 extends 'CPI::Gateway::Base';
 
 has '+checkout_url' => (
-    default => 'https://pagseguro.uol.com.br/v2/checkout/payment.html'
+    default => sub { 'https://pagseguro.uol.com.br/v2/checkout/payment.html' },
 );
 
 has '+currency' => (
-    default => 'BRL',
+    default => sub { 'BRL' },
 );
 
 has base_url => (
-    isa => 'Str',
     is => 'ro',
-    default => 'https://ws.pagseguro.uol.com.br/v2'
+    default => sub { 'https://ws.pagseguro.uol.com.br/v2' },
 );
 
 has token => (
-    isa => 'Str',
     is  => 'ro',
 );
 
@@ -203,8 +200,6 @@ sub get_hidden_inputs {
 
     return @hidden_inputs;
 }
-
-__PACKAGE__->meta->make_immutable;
 
 1;
 
