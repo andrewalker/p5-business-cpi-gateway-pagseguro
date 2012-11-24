@@ -1,5 +1,5 @@
-package CPI::Gateway::PagSeguro;
-# ABSTRACT: CPI's PagSeguro driver
+package Business::CPI::Gateway::PagSeguro;
+# ABSTRACT: Business::CPI's PagSeguro driver
 
 use Moo;
 use XML::LibXML;
@@ -9,7 +9,7 @@ use URI;
 use URI::QueryParam;
 use DateTime;
 
-extends 'CPI::Gateway::Base';
+extends 'Business::CPI::Gateway::Base';
 
 has '+checkout_url' => (
     default => sub { 'https://pagseguro.uol.com.br/v2/checkout/payment.html' },
@@ -230,7 +230,7 @@ attribute.
 =method get_and_parse_notification
 
 Gets the url from L</get_notifications_url>, and loads the XML from there.
-Returns a parsed standard CPI hash.
+Returns a parsed standard Business::CPI hash.
 
 =method get_and_parse_transactions
 
@@ -239,7 +239,7 @@ Returns a parsed standard CPI hash.
 =method query_transactions
 
 Alias for L</get_and_parse_transactions> to maintain compatibility with other
-CPI modules.
+Business::CPI modules.
 
 =method notify
 
@@ -247,4 +247,4 @@ CPI modules.
 
 =head1 SEE ALSO
 
-L<CPI::Gateway::Base>
+L<Business::CPI::Gateway::Base>

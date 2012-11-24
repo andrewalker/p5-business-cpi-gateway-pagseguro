@@ -1,5 +1,5 @@
 =encoding utf-8
 
-=head1 CPI::Gateway::PagSeguro
+=head1 Business::CPI::Gateway::PagSeguro
 
-Driver for CPI to connect to PagSeguro.
+Driver for Business::CPI to connect to PagSeguro.

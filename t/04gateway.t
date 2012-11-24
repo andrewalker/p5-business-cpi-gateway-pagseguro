@@ -4,7 +4,7 @@ use strict;
 use autodie;
 use Test::More;
 use FindBin '$Bin';
-use CPI::Gateway::PagSeguro;
+use Business::CPI::Gateway::PagSeguro;
 
 sub cleanup {
     unlink "$Bin/data/pagseguro_notification_completed.xml"
@@ -18,12 +18,12 @@ sub get_value_for {
     return $form->look_down(_tag => 'input', name => $name )->attr('value');
 }
 
-ok(my $cpi = CPI::Gateway::PagSeguro->new(
+ok(my $cpi = Business::CPI::Gateway::PagSeguro->new(
     receiver_email => 'andre@andrewalker.net',
     token          => '123456',
 ), 'build $cpi');
 
-isa_ok($cpi, 'CPI::Gateway::PagSeguro');
+isa_ok($cpi, 'Business::CPI::Gateway::PagSeguro');
 
 ok(my $cart = $cpi->new_cart({
     buyer => {
@@ -32,7 +32,7 @@ ok(my $cart = $cpi->new_cart({
     }
 }), 'build $cart');
 
-isa_ok($cart, 'CPI::Cart');
+isa_ok($cart, 'Business::CPI::Cart');
 
 ok(my $item = $cart->add_item({
     id          => 1,
@@ -53,7 +53,7 @@ is(get_value_for($form, 'senderName'),    'Mr. Buyer', 'sender name');
 
 {
     no warnings 'redefine';
-    *CPI::Gateway::PagSeguro::get_notifications_url = sub {
+    *Business::CPI::Gateway::PagSeguro::get_notifications_url = sub {
         "file://$Bin/data/pagseguro_notification_completed.xml"
     };
 }
@@ -84,7 +84,7 @@ is(get_value_for($form, 'senderName'),    'Mr. Buyer', 'sender name');
 
 {
     no warnings 'redefine';
-    *CPI::Gateway::PagSeguro::get_notifications_url = sub {
+    *Business::CPI::Gateway::PagSeguro::get_notifications_url = sub {
         "file://$Bin/data/pagseguro_notification_failed.xml"
     };
 }
@@ -115,10 +115,10 @@ is(get_value_for($form, 'senderName'),    'Mr. Buyer', 'sender name');
 
 {
     no warnings qw/redefine once/;
-    *CPI::Gateway::PagSeguro::get_transaction_query_url = sub {
+    *Business::CPI::Gateway::PagSeguro::get_transaction_query_url = sub {
         "file://$Bin/data/pagseguro_transactions.xml"
     };
-    *CPI::Gateway::PagSeguro::get_transaction_details_url = sub {
+    *Business::CPI::Gateway::PagSeguro::get_transaction_details_url = sub {
         "file://$Bin/data/pagseguro_transaction_details.xml"
     };
 }
