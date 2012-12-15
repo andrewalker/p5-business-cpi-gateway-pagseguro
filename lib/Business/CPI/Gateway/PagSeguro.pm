@@ -11,6 +11,8 @@ use DateTime;
 
 extends 'Business::CPI::Gateway::Base';
 
+# VERSION
+
 has '+checkout_url' => (
     default => sub { 'https://pagseguro.uol.com.br/v2/checkout/payment.html' },
 );
