@@ -247,6 +247,10 @@ Business::CPI modules.
 
 =method get_hidden_inputs
 
+=head1 SPONSORED BY
+
+Aware - L< http://www.aware.com.br >
+
 =head1 SEE ALSO
 
 L<Business::CPI::Gateway::Base>
