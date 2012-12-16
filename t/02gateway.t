@@ -1,10 +1,12 @@
 #!/usr/bin/env perl
+use utf8;
 use warnings;
 use strict;
 use autodie;
 use Test::More;
 use FindBin '$Bin';
 use Business::CPI::Gateway::PagSeguro;
+use Encode;
 
 sub cleanup {
     unlink "$Bin/data/pagseguro_notification_completed.xml"
@@ -64,6 +66,7 @@ is(get_value_for($form, 'senderName'),    'Mr. Buyer', 'sender name');
         my $contents = <$fh>;
     close $fh;
 
+    $contents = decode( 'utf-8', $contents );
     $contents =~ s[__PAYMENT_ID__][1];
     $contents =~ s[__STATUS__][3];
 
@@ -75,10 +78,17 @@ is(get_value_for($form, 'senderName'),    'Mr. Buyer', 'sender name');
 {
     my $not = $cpi->get_and_parse_notification('766B9C-AD4B044B04DA-77742F5FA653-E1AB24');
     is_deeply($not, {
+        net_amount => '200.00',
+        gateway_transaction_id => '9E884542-81B3-4419-9A75-BCC6FB495EF1',
         payment_id => 1,
         status     => 'completed',
         amount     => '200.00',
         date       => '2011-02-10T16:13:41.000-03:00',
+        payer      => {
+            name => encode_utf8("João da Silva"),
+        },
+        exchange_rate => 0,
+        fee => '0.00'
     }, 'notification for completed transaction');
 }
 
@@ -95,6 +105,7 @@ is(get_value_for($form, 'senderName'),    'Mr. Buyer', 'sender name');
         my $contents = <$fh>;
     close $fh;
 
+    $contents = decode( 'utf-8', $contents );
     $contents =~ s[__PAYMENT_ID__][abc];
     $contents =~ s[__STATUS__][7];
 
@@ -106,10 +117,17 @@ is(get_value_for($form, 'senderName'),    'Mr. Buyer', 'sender name');
 {
     my $not = $cpi->get_and_parse_notification('766B9C-AD4B044B04DA-77742F5FA653-E1AB24');
     is_deeply($not, {
+        net_amount => '200.00',
+        gateway_transaction_id => '9E884542-81B3-4419-9A75-BCC6FB495EF1',
         payment_id => 'abc',
         status     => 'failed',
         amount     => '200.00',
         date       => '2011-02-10T16:13:41.000-03:00',
+        payer      => {
+            name => encode_utf8("João da Silva"),
+        },
+        exchange_rate => 0,
+        fee => '0.00'
     }, 'notification for failed transaction');
 }
 
@@ -130,11 +148,18 @@ is(get_value_for($form, 'senderName'),    'Mr. Buyer', 'sender name');
         total_pages          => 1,
         transactions         => [
             {
+                net_amount => '49900.50',
+                gateway_transaction_id => '9E884542-81B3-4419-9A75-BCC6FB495EF1',
                 amount      => '49900.00',
                 date        => "2011-02-05T15:46:12.000-02:00",
                 payment_id  => "REF1234",
                 status      => "completed",
                 buyer_email => 'comprador@uol.com.br',
+                payer      => {
+                    name => encode_utf8("JosÃ© Comprador"),
+                },
+                exchange_rate => 0,
+                fee => '0.00'
             }
         ]
     };
