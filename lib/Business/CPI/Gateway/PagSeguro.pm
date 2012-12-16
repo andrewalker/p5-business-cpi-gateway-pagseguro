@@ -125,7 +125,7 @@ sub _parse_transaction {
     my $net    = $xml->getChildrenByTagName('netAmount')->string_value;
     my $fee    = $xml->getChildrenByTagName('feeAmount')->string_value;
     my $code   = $xml->getChildrenByTagName('code')->string_value;
-    my $payer  = $xml->getChildrenByTagName('sender')->getChildrenByTagName('name')->string_value;
+    my $payer  = $xml->getChildrenByTagName('sender')->get_node(1)->getChildrenByTagName('name')->string_value;
 
     return {
         payment_id             => $ref,
