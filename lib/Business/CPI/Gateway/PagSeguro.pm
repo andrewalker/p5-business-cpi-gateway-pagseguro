@@ -124,14 +124,21 @@ sub _parse_transaction {
     my $amount = $xml->getChildrenByTagName('grossAmount')->string_value;
     my $net    = $xml->getChildrenByTagName('netAmount')->string_value;
     my $fee    = $xml->getChildrenByTagName('feeAmount')->string_value;
+    my $code   = $xml->getChildrenByTagName('code')->string_value;
+    my $payer  = $xml->getChildrenByTagName('sender')->getChildrenByTagName('name')->string_value;
 
     return {
-        payment_id => $ref,
-        status     => $self->_status_code_map($status),
-        amount     => $amount,
-        date       => $date,
-        net_amount => $net,
-        tax        => $fee,
+        payment_id             => $ref,
+        gateway_transaction_id => $code,
+        status                 => $self->_status_code_map($status),
+        amount                 => $amount,
+        date                   => $date,
+        net_amount             => $net,
+        fee                    => $fee,
+        exchange_rate          => 0,
+        payer => {
+            name => $payer,
+        },
     };
 }
 
