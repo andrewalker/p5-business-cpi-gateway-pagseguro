@@ -2,7 +2,6 @@
 use utf8;
 use warnings;
 use strict;
-use autodie;
 use Test::More;
 use FindBin '$Bin';
 use Business::CPI::Gateway::PagSeguro;
@@ -62,7 +61,7 @@ is(get_value_for($form, 'senderName'),    'Mr. Buyer', 'sender name');
 
 {
     local $/ = undef;
-    open my $fh, '<', "$Bin/data/pagseguro_notification.xml";
+    open my $fh, '<', "$Bin/data/pagseguro_notification.xml" or die $!;
         my $contents = <$fh>;
     close $fh;
 
@@ -70,7 +69,7 @@ is(get_value_for($form, 'senderName'),    'Mr. Buyer', 'sender name');
     $contents =~ s[__PAYMENT_ID__][1];
     $contents =~ s[__STATUS__][3];
 
-    open my $write_fh, '>', "$Bin/data/pagseguro_notification_completed.xml";
+    open my $write_fh, '>', "$Bin/data/pagseguro_notification_completed.xml" or die $!;
         print $write_fh $contents;
     close $write_fh;
 }
@@ -101,7 +100,7 @@ is(get_value_for($form, 'senderName'),    'Mr. Buyer', 'sender name');
 
 {
     local $/ = undef;
-    open my $fh, '<', "$Bin/data/pagseguro_notification.xml";
+    open my $fh, '<', "$Bin/data/pagseguro_notification.xml" or die $!;
         my $contents = <$fh>;
     close $fh;
 
@@ -109,7 +108,7 @@ is(get_value_for($form, 'senderName'),    'Mr. Buyer', 'sender name');
     $contents =~ s[__PAYMENT_ID__][abc];
     $contents =~ s[__STATUS__][7];
 
-    open my $write_fh, '>', "$Bin/data/pagseguro_notification_failed.xml";
+    open my $write_fh, '>', "$Bin/data/pagseguro_notification_failed.xml" or die $!;
         print $write_fh $contents;
     close $write_fh;
 }
