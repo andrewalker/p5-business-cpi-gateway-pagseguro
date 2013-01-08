@@ -307,7 +307,7 @@ Business::CPI modules.
 
 =head1 SPONSORED BY
 
-Aware - L< http://www.aware.com.br >
+L<< Aware | http://www.aware.com.br >>
 
 =head1 SEE ALSO
 
