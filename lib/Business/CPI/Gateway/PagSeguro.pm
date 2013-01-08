@@ -189,14 +189,52 @@ sub _status_code_map {
 sub get_hidden_inputs {
     my ($self, $info) = @_;
 
+    my $buyer = $info->{buyer};
+    my $cart  = $info->{cart};
+
     my @hidden_inputs = (
         receiverEmail => $self->receiver_email,
         currency      => $self->currency,
         encoding      => $self->form_encoding,
         reference     => $info->{payment_id},
-        senderName    => $info->{buyer}->name,
-        senderEmail   => $info->{buyer}->email,
+        senderName    => $buyer->name,
+        senderEmail   => $buyer->email,
     );
+
+    my %buyer_extra = (
+        address_complement => 'shippingAddressComplement',
+        address_district   => 'shippingAddressDistrict',
+        address_street     => 'shippingAddressStreet',
+        address_number     => 'shippingAddressNumber',
+        address_city       => 'shippingAddressCity',
+        address_state      => 'shippingAddressState',
+        address_country    => 'shippingAddressCountry',
+        address_zip_code   => 'shippingAddressPostalCode',
+    );
+
+    for (keys %buyer_extra) {
+        if (my $value = $buyer->$_) {
+            push @hidden_inputs, ( $buyer_extra{$_} => $value );
+        }
+    }
+
+    my $extra_amount = 0;
+
+    if (my $disc = $cart->discount) {
+        $extra_amount -= $disc;
+    }
+
+    if (my $handl = $cart->handling) {
+        $extra_amount += $handl;
+    }
+
+    if (my $tax = $cart->tax) {
+        $extra_amount += $tax;
+    }
+
+    if ($extra_amount) {
+        push @hidden_inputs, ( extraAmount => $extra_amount );
+    }
 
     my $i = 1;
 
@@ -208,6 +246,15 @@ sub get_hidden_inputs {
             "itemAmount$i"      => $item->price,
             "itemQuantity$i"    => $item->quantity,
           );
+
+        if (my $weight = $item->weight) {
+            push @hidden_inputs, ( "itemWeight$i" => $weight * 1000 ); # show in grams
+        }
+
+        if (my $ship = $item->shipping) {
+            push @hidden_inputs, ( "itemShippingCost$i" => $ship );
+        }
+
         $i++;
     }
 
