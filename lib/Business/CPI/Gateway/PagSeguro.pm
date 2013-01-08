@@ -8,6 +8,7 @@ use LWP::Simple ();
 use URI;
 use URI::QueryParam;
 use DateTime;
+use Locale::Country ();
 
 extends 'Business::CPI::Gateway::Base';
 
@@ -214,6 +215,13 @@ sub get_hidden_inputs {
 
     for (keys %buyer_extra) {
         if (my $value = $buyer->$_) {
+            if ($_ eq 'shippingAddressCountry') {
+                $value = uc(
+                    Locale::Country::country_code2code(
+                        $value, 'alpha-2', 'alpha-3'
+                    )
+                );
+            }
             push @hidden_inputs, ( $buyer_extra{$_} => $value );
         }
     }
