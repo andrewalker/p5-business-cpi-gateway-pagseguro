@@ -241,6 +241,7 @@ sub get_hidden_inputs {
     }
 
     if ($extra_amount) {
+        $extra_amount = sprintf( "%.2f", $extra_amount );
         push @hidden_inputs, ( extraAmount => $extra_amount );
     }
 
