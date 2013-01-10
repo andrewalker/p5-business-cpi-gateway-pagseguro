@@ -9,6 +9,7 @@ use URI;
 use URI::QueryParam;
 use DateTime;
 use Locale::Country ();
+use Data::Dumper;
 
 extends 'Business::CPI::Gateway::Base';
 
@@ -70,6 +71,10 @@ sub get_and_parse_notification {
         $self->get_notifications_url($code)
     );
 
+    if ($self->log->is_debug) {
+        $self->log->debug("The notification we received was:\n" . Dumper($xml));
+    }
+
     return $self->_parse_transaction($xml);
 }
 
@@ -77,9 +82,15 @@ sub notify {
     my ($self, $req) = @_;
 
     if ($req->params->{notificationType} eq 'transaction') {
-        return $self->get_and_parse_notification(
-            $req->params->{notificationCode}
-        );
+        my $code = $req->params->{notificationCode};
+
+        $self->log->info("Received notification for $code");
+
+        my $result = $self->get_and_parse_notification( $code );
+
+        if ($self->log->is_debug) {
+            $self->log->debug("The notification we're returning is " . Dumper($result));
+        }
     }
 }
 
