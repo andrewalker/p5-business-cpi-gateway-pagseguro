@@ -131,7 +131,7 @@ sub _parse_transaction {
     return {
         payment_id             => $ref,
         gateway_transaction_id => $code,
-        status                 => $self->_status_code_map($status),
+        status                 => $self->_interpret_status($status),
         amount                 => $amount,
         date                   => $date,
         net_amount             => $net,
@@ -168,21 +168,28 @@ sub _build_uri {
     return $uri->as_string;
 }
 
-sub _status_code_map {
+sub _interpret_status {
     my ($self, $status) = @_;
 
-    croak qq/No status provided/
-        unless $status;
+    $status = int($status || 0);
 
-    $status = int($status);
+    # 1: aguardando pagamento
+    # 2: em análise
+    # 3: paga
+    # 4: disponível
+    # 5: em disputa
+    # 6: devolvida
+    # 7: cancelada
 
-    my @status_codes;
+    my @status_codes = ('unknown');
     @status_codes[1,2,5] = ('processing') x 3;
-    @status_codes[6,7]   = ('failed') x 2;
     @status_codes[3,4]   = ('completed') x 2;
+    $status_codes[6]     = 'refunded';
+    $status_codes[7]     = 'failed';
 
-    croak qq/Can't understand status code $status/
-        if ($status > 7 || $status < 1);
+    if ($status > 7) {
+        return 'unknown';
+    }
 
     return $status_codes[$status];
 }
