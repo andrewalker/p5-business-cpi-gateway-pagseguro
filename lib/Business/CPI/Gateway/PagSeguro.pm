@@ -91,6 +91,8 @@ sub notify {
         if ($self->log->is_debug) {
             $self->log->debug("The notification we're returning is " . Dumper($result));
         }
+
+        return $result;
     }
 }
 
