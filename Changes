@@ -1,6 +1,8 @@
 Revision history for Business::CPI's driver for PagSeguro.
 
 {{$NEXT}}
+
+0.901 2013-01-30T22:07:53Z
     - Add Changes file
     - Update version numbering to be like other CPI modules
 
