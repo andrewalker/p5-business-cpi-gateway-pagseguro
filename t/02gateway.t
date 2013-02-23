@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use Test::More;
 use FindBin '$Bin';
-use Business::CPI::Gateway::PagSeguro;
+use Business::CPI::Gateway::PagSeguro::ClientForm;
 use Encode;
 
 sub cleanup {
@@ -19,7 +19,7 @@ sub get_value_for {
     return $form->look_down(_tag => 'input', name => $name )->attr('value');
 }
 
-ok(my $cpi = Business::CPI::Gateway::PagSeguro->new(
+ok(my $cpi = Business::CPI::Gateway::PagSeguro::ClientForm->new(
     receiver_email => 'andre@andrewalker.net',
     token          => '123456',
 ), 'build $cpi');
@@ -44,6 +44,7 @@ ok(my $item = $cart->add_item({
 
 ok(my $form = $cart->get_form_to_pay(123), 'get form to pay');
 isa_ok($form, 'HTML::Element');
+use DDP; p $form;
 
 is(get_value_for($form, 'itemId1'),       '1', 'itemId1');
 is(get_value_for($form, 'itemQuantity1'), '1', 'itemQuantity1');
