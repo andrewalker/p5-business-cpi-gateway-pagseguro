@@ -33,7 +33,7 @@ ok(my $cart = $cpi->new_cart({
     }
 }), 'build $cart');
 
-isa_ok($cart, 'Business::CPI::Cart');
+ok($cart->does('Business::CPI::Role::Cart'), 'cart implements the correct role');
 
 ok(my $item = $cart->add_item({
     id          => 1,
