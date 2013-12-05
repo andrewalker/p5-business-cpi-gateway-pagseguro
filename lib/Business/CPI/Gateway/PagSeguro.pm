@@ -170,7 +170,7 @@ sub _build_uri {
 
     $info ||= {};
 
-    $info->{email} = $self->receiver_email;
+    $info->{email} = $self->receiver_id;
     $info->{token} = $self->token;
 
     my $uri = URI->new($self->base_url . $path);
@@ -210,9 +210,9 @@ sub _interpret_status {
 
 sub _checkout_form_main_map {
     return {
-        receiver_email => 'receiverEmail',
-        currency       => 'currency',
-        form_encoding  => 'encoding',
+        receiver_id   => 'receiverEmail',
+        currency      => 'currency',
+        form_encoding => 'encoding',
     };
 }
 

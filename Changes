@@ -1,6 +1,9 @@
 Revision history for Business::CPI's driver for PagSeguro.
 
 {{$NEXT}}
+    - Remove receiver_email attribute
+
+0.902 2013-11-28T12:18:04Z
     - Update to latest version of Business::CPI
 
 0.901 2013-01-30T22:07:53Z
