@@ -104,11 +104,16 @@ sub get_and_parse_transactions {
         $self->get_transaction_query_url( $info )
     );
 
-    my @transactions = $xml->getChildrenByTagName('transactions')->get_node(1)->getChildrenByTagName('transaction');
+    my $results_in_this_page = $xml->getChildrenByTagName('resultsInThisPage')->string_value;
+
+    my @transactions = $results_in_this_page
+                     ? $xml->getChildrenByTagName('transactions')->get_node(1)->getChildrenByTagName('transaction')
+                     : ()
+                     ;
 
     return {
         current_page         => $xml->getChildrenByTagName('currentPage')->string_value,
-        results_in_this_page => $xml->getChildrenByTagName('resultsInThisPage')->string_value,
+        results_in_this_page => $results_in_this_page,
         total_pages          => $xml->getChildrenByTagName('totalPages')->string_value,
         transactions         => [
             map { $self->get_transaction_details( $_ ) }
